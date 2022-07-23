@@ -1,7 +1,7 @@
 import { Auth } from 'aws-amplify';
 import React, { Component } from 'react';
 
-
+//test
 export default class Navbar extends Component {
   handleLogOut = async event => {
     event.preventDefault();
