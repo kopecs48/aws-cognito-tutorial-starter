@@ -15,12 +15,14 @@ import Welcome from './components/auth/Welcome';
 import Footer from './components/Footer';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { Auth } from 'aws-amplify';
 library.add(faEdit);
 
 class App extends Component {
 
   state = {
     isAuthenticated: false,
+    isAuthenticating: true,
     user: null
   }
 
@@ -32,14 +34,30 @@ class App extends Component {
     this.setState({ user: user});
   }
 
+  async componentDidMount(){
+
+    try {const session = await Auth.currentSession();
+    this.setAuthStatus(true);
+    console.log(session);
+    const user = await Auth.currentAuthenticatedUser();
+    this.setUser(user);
+    }catch(error){
+    console.log(error);
+    }
+    this.setState({ isAuthenticating: false});
+
+  }
+
   render() {
     const authProps = {
       isAuthenticated: this.state.isAuthenticated,
       user: this.state.user,
       setAuthStatus: this.setAuthStatus,
       setUser: this.setUser
+      
     }
     return (
+      !this.state.isAuthenticating &&
       <div className="App">
         <Router>
           <div>
